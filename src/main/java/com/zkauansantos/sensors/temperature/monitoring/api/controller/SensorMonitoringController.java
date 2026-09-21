@@ -30,7 +30,7 @@ public class SensorMonitoringController {
 
     @PutMapping("/enable")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void enable(@PathVariable  TSID sensorId) {
+    public void enable(@PathVariable TSID sensorId) {
         SensorMonitoring sensorMonitoring = findByIdOrDefault(sensorId);
         sensorMonitoring.setEnabled(true);
         sensorMonitoringRepository.saveAndFlush(sensorMonitoring);
