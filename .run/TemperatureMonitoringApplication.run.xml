@@ -3,7 +3,7 @@
     <module name="temperature-monitoring.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.zkauansantos.sensors.temperature.monitoring.TemperatureMonitoringApplication" />
     <option name="VM_PARAMETERS" value="-XX:MaxRAM=256m" />
-    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/microsservices/ems-sensors-temperature-monitoring" />
+    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/microsservices/temperature-monitoring" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.zkauansantos.sensors.temperature.monitoring.*" />
