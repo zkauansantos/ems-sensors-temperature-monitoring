@@ -3,11 +3,20 @@ package com.zkauansantos.sensors.temperature.monitoring.infra.rabbitmq;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import tools.jackson.databind.json.JsonMapper;
 
 @Configuration
 public class RabbitMQConfig {
+    public static final String QUEUE_NAME = "temperature-monitoring.process-temperature.v1.q";
+
+    @Bean
+    public JacksonJsonMessageConverter jacksonJsonMessageConverter(JsonMapper jsonMapper) {
+        return new JacksonJsonMessageConverter(jsonMapper);
+    }
+
     @Bean
     public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
         return new RabbitAdmin(connectionFactory);
@@ -15,7 +24,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue queue(){
-        return QueueBuilder.durable("temperature-monitoring.process-temperature.v1.q").build();
+        return QueueBuilder.durable(QUEUE_NAME).build();
     }
 
     @Bean

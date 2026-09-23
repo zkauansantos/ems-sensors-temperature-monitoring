@@ -1,6 +1,6 @@
 package com.zkauansantos.sensors.temperature.monitoring.api.controller;
 
-import com.zkauansantos.sensors.temperature.monitoring.api.model.TemperatureLogOutput;
+import com.zkauansantos.sensors.temperature.monitoring.api.model.TemperatureLogData;
 import com.zkauansantos.sensors.temperature.monitoring.domain.model.SensorId;
 import com.zkauansantos.sensors.temperature.monitoring.domain.repository.TemperatureLogRepository;
 import io.hypersistence.tsid.TSID;
@@ -20,10 +20,10 @@ public class TemperatureLogController {
     private final TemperatureLogRepository temperatureLogRepository;
 
     @GetMapping
-    public Page<TemperatureLogOutput> search(@PathVariable TSID sensorId, @PageableDefault  Pageable pageable){
+    public Page<TemperatureLogData> search(@PathVariable TSID sensorId, @PageableDefault  Pageable pageable){
         return temperatureLogRepository.findAllBySensorId(new SensorId(sensorId), pageable)
                 .map(temperature ->
-                        TemperatureLogOutput.builder()
+                        TemperatureLogData.builder()
                         .id(temperature.getId().getValue())
                         .registeredAt(temperature.getRegisteredAt())
                         .sensorId(temperature.getSensorId().getValue())
