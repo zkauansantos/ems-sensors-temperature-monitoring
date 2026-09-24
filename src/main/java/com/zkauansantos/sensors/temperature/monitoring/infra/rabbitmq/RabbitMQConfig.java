@@ -8,9 +8,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import tools.jackson.databind.json.JsonMapper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 public class RabbitMQConfig {
-    public static final String QUEUE_NAME = "temperature-monitoring.process-temperature.v1.q";
+    private static final String PROCESS_TEMPERATURE_NAME = "temperature-monitoring.process-temperature.v1.";
+    public static final String QUEUE_PROCESS_TEMPERATURE_NAME = PROCESS_TEMPERATURE_NAME + "q";
+    public static final String DL_QUEUE_PROCESS_TEMPERATURE_NAME = PROCESS_TEMPERATURE_NAME + "dql";
+    public static final String QUEUE_ALERT_TEMPERATURE_NAME = "temperature-monitoring.alert-temperature.v1.q";
+
 
     @Bean
     public JacksonJsonMessageConverter jacksonJsonMessageConverter(JsonMapper jsonMapper) {
@@ -23,8 +30,22 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue queue(){
-        return QueueBuilder.durable(QUEUE_NAME).build();
+    public Queue queueProcessTemperature(){
+        Map<String, Object> args = new HashMap<>();
+        args.put("x-dead-letter-exchange", "");
+        args.put("x-dead-letter-routing-key", DL_QUEUE_PROCESS_TEMPERATURE_NAME);
+
+        return QueueBuilder.durable(QUEUE_PROCESS_TEMPERATURE_NAME).withArguments(args).build();
+    }
+
+    @Bean
+    public Queue dlQueueProcessTemperature(){
+        return QueueBuilder.durable(DL_QUEUE_PROCESS_TEMPERATURE_NAME).build();
+    }
+
+    @Bean
+    public Queue queueAlertTemperature(){
+        return QueueBuilder.durable(QUEUE_ALERT_TEMPERATURE_NAME).build();
     }
 
     @Bean
@@ -33,7 +54,13 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding binding(){
-        return BindingBuilder.bind(queue()).to(exchange());
+    public Binding bindingProcessTemperature(){
+        return BindingBuilder.bind(queueProcessTemperature()).to(exchange());
     }
+
+    @Bean
+    public Binding bindingAlertTemperature(){
+        return BindingBuilder.bind(queueAlertTemperature()).to(exchange());
+    }
+
 }
